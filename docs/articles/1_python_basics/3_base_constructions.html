@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Энциклопедия DevMan / Основы Питона / Основные конструкции</title>
+    <meta name="description" content="">
+    
+<link href="../../css/bootstrap.css" rel="stylesheet">
+<link href="../../css/style.css" rel="stylesheet">
+
+
+</head>
+
+<body>
+
+    <div class="container-fluid">
+    <div class="row" id="header">
+            <div class="col-md-12">
+                <strong>Энциклопедия DevMan</strong>
+            </div>
+        </div>
+         <div class="row">
+            <div class="col-md-2">
+            </div>
+            <div class="col-md-8" id="main-field">
+                
+    <div class="breadcrumbs"><a href="../../index.html">Home</a>&nbsp;&frasl;&nbsp;Основы Питона&nbsp;&frasl;&nbsp;Основные конструкции</div>
+    <h1>Основные конструкции</h1>
+    <h3>Коротко о главных управляющих конструкциях</h3>
+
+<p>Сейчас мы совсем реактивно пройдёмся по самым основным управляющим конструкциям. Гет реди.</p>
+
+<h3>if</h3>
+
+<p>Ну, вы все знаете условный оператор, так ведь?</p>
+
+<pre><code>:::python
+if age &lt; 18:
+    print('Никаких тебе сигарет. Ишь чего удумал!')
+else:
+    print('Вам синий или красный?')
+</code></pre>
+
+<p>Есть ещё <code>elif</code>, их можно сделать много в одном операторе. Это такой аналог <code>which</code> из других языков.</p>
+
+<h3>for</h3>
+
+<p>Цикл. Вместо сишного варианта с init, cond и loop выражениями, тут просто итерация по коллекции:</p>
+
+<pre><code>:::python
+for user in users:
+    print user
+</code></pre>
+
+<p>Иногда надо не пройтись по списку, а выполнить одну и ту же операцию много раз. Тогда хорошо подходит функция
+<a href="https://docs.python.org/3.5/library/functions.html#func-range">range</a>. Она возвращает целые числа в заданном промежутке,
+поэтому в цикле её можно использовать так:</p>
+
+<pre><code>:::python
+for level_num in range(10):
+    user.levelup()  # пользователь получит десять уровней. Читер!
+</code></pre>
+
+<p>А вот <code>break</code> и <code>continue</code> делают то же, что в Паскале и Сях. <code>break</code> прерывает выполнение цикла,
+<code>continue</code> завершает текущую итерацию и переходит к следующей.</p>
+
+<p>Ещё у цикла есть <code>else</code>, но про него почти никто не знает. Как он работает можно посмотреть
+<a href="https://docs.python.org/3.5/tutorial/controlflow.html#break-and-continue-statements-and-else-clauses-on-loops">в официальной документации</a>.</p>
+
+<h3>def</h3>
+
+<p>Начало объявления функции. После него идёт название,
+потом – аргументы функции в скобках, двоеточие и тело функции с отступом:</p>
+
+<pre><code>:::python
+def get_square(value):
+    return value ** 2
+</code></pre>
+
+<p>То, что после <code>return</code> – это возвращаемое значение функции.</p>
+
+<p>Функцию создали, вот как её теперь использовать:</p>
+
+<pre><code>:::python
+print(get_square(2))  # 4
+print(get_square(6))  # 36
+print(get_square('ыыы'))  # всё сломается
+</code></pre>
+
+<p>А вот пример посложнее, из исходников Девмана. Получает пользователя по айди в Слаке:</p>
+
+<pre><code>:::python
+def _get_user_by_slack_id(slack_user_id):
+    user_email = get_slack_email_for_user(slack_user_id)
+    return User.objects.filter(email__iexact=user_email).first()
+</code></pre>
+
+<p>(вот почему емейл необходим)</p>
+
+<h3>range</h3>
+
+<p>Функция очень полезная, поэтому про неё отдельно. <code>range</code> генерирует целые числа в заданном диапазоне. Например:</p>
+
+<pre><code>:::python
+range(10)  # 0..0
+range(5, 10)  # 5..9
+range(5, 10, 2)  # [5, 7, 9] (от пяти до девяти с шагом два)
+</code></pre>
+
+<p>Фишка этой функции заключается в том, что она не создаёт список со всеми числами.
+Вместо этого он вернёт объект, который будет возвращать элементы как только они нужны, по одному.
+Поэтому код <code>range(9999999999999)</code> не съест всю память.
+Этот хитрый объект (Sequence ABC, но об этом потом) можно превратить в список явно:</p>
+
+<pre><code>:::python
+list(range(9999999999999))
+</code></pre>
+
+<p>(не советую так делать)</p>
+
+<h3>pass</h3>
+
+<p>Блок, который ничего не делает:</p>
+
+<pre><code>:::python
+for i in range(20):
+    pass  # 20 раз сделать ничего. Очень полезно!
+</code></pre>
+
+<p>Часто используется в начальном коде для заданий: в финальной версии вместо <code>pass</code> должен быть настоящий код.</p>
+
+
+            </div>
+            <div class="col-md-2">
+            </div>
+        </div>
+        <div class="row" id="footer">
+            <div class="col-md-12">
+                <strong>&copy; devman.org</strong>
+            </div>
+        </div>
+    </div>
+    
+<script src="../../js/jquery.min.js"></script>
+<script src="../../js/bootstrap.min.js"></script>
+<script src="../../js/scripts.js"></script>
+
+
+    
+</body>
+
+</html>
