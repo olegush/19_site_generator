@@ -61,28 +61,28 @@ def write_articles_files(template, topics, articles):
     template_article = get_env().get_template(template)
     markdowner = Markdown()
     for topic in topics:
-        for article in articles:
-            if article['topic'] in topic['slug']:
-                dirname, full_filename = os.path.split(article['path'])
-                filename, fil_ext = os.path.splitext(full_filename)
-                path_to_articles_dir = os.path.join('docs/articles', dirname)
-                article_html = get_html_data(
-                    'articles',
-                    article['source'],
-                    markdowner
-                )
-                article_str = template_article.render(
-                    url=article['path'],
-                    topic_title=topic['title'],
-                    article_title=article['title'],
-                    article_content=article_html
-                )
-                write_article_file(
-                    path_to_articles_dir,
-                    filename,
-                    fil_ext,
-                    article_str
-                )
+        for article in filter(lambda x: x['topic']== topic['slug'], articles):
+            dirname, full_filename = os.path.split(article['path'])
+            filename, fil_ext = os.path.splitext(full_filename)
+            path_to_articles_dir = os.path.join('docs/articles', dirname)
+            article_html = get_html_data(
+                'articles',
+                article['source'],
+                markdowner
+            )
+            article_str = template_article.render(
+                url=article['path'],
+                topic_title=topic['title'],
+                article_title=article['title'],
+                article_content=article_html
+            )
+            write_article_file(
+                path_to_articles_dir,
+                filename,
+                fil_ext,
+                article_str
+            )
+
 
 
 if __name__ == '__main__':
