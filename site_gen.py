@@ -37,12 +37,13 @@ def write_index_file(template, topics, articles):
         file_index.write(index_str)
 
 
-def get_md_data(dir, path):
+def get_html_data(dir_articles, path, markdowner):
     with open(
-        os.path.join(dir, path),
+        os.path.join(dir_articles, path),
         encoding='utf-8'
     ) as file_md:
-        return file_md.read()
+        md_data = file_md.read()
+    return markdowner.convert(md_data)
 
 
 def write_article_file(path, filename, filext, article_str):
@@ -65,10 +66,11 @@ def write_articles_files(template, topics, articles):
                 dirname, full_filename = os.path.split(article['path'])
                 filename, fil_ext = os.path.splitext(full_filename)
                 path_to_articles_dir = os.path.join('docs/articles', dirname)
-                article_html = markdowner.convert(get_md_data(
+                article_html = get_html_data(
                     'articles',
-                    article['source']
-                ))
+                    article['source'],
+                    markdowner
+                )
                 article_str = template_article.render(
                     url=article['path'],
                     topic_title=topic['title'],
