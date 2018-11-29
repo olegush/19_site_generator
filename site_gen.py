@@ -33,16 +33,16 @@ def get_new_articles_list(articles_list):
 def write_index_file(template, topics, articles):
     template_index = get_env().get_template(template)
     index_str = template_index.render(topics=topics, articles=articles)
-    with open('docs/index.html', mode='w', encoding='utf-8') as file:
-        file.write(index_str)
+    with open('docs/index.html', mode='w', encoding='utf-8') as file_index:
+        file_index.write(index_str)
 
 
 def get_md_data(dir, path):
     with open(
         os.path.join(dir, path),
         encoding='utf-8'
-    ) as file:
-        return file.read()
+    ) as file_md:
+        return file_md.read()
 
 
 def write_article_file(path, filename, filext, article_str):
@@ -52,8 +52,8 @@ def write_article_file(path, filename, filext, article_str):
         os.path.join(path, filename + filext),
         mode='w',
         encoding='utf-8'
-    ) as file:
-        file.write(article_str)
+    ) as file_article:
+        file_article.write(article_str)
 
 
 def write_articles_files(template, topics, articles):
@@ -62,20 +62,23 @@ def write_articles_files(template, topics, articles):
     for topic in topics:
         for article in articles:
             if article['topic'] in topic['slug']:
-                dir, full_filename = os.path.split(article['path'])
-                filename, filext = os.path.splitext(full_filename)
-                path_to_articles_dir = os.path.join('docs/articles', dir)
-                article_md = get_md_data('articles', article['source'])
+                dirname, full_filename = os.path.split(article['path'])
+                filename, fil_ext = os.path.splitext(full_filename)
+                path_to_articles_dir = os.path.join('docs/articles', dirname)
+                article_html = markdowner.convert(get_md_data(
+                    'articles',
+                    article['source']
+                ))
                 article_str = template_article.render(
                     url=article['path'],
                     topic_title=topic['title'],
                     article_title=article['title'],
-                    article_content=markdowner.convert(article_md)
+                    article_content=article_html
                 )
                 write_article_file(
                     path_to_articles_dir,
                     filename,
-                    filext,
+                    fil_ext,
                     article_str
                 )
 
