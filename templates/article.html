@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+{% block title %}Энциклопедия DevMan / {{ topic_title }} / {{ article_title }}{% endblock %}
+{% block css %}
+<link href="../../css/bootstrap.css" rel="stylesheet">
+<link href="../../css/style.css" rel="stylesheet">
+{% endblock %}
+{% block content %}
+    <div class="breadcrumbs"><a href="../../index.html">Home</a>&nbsp;&frasl;&nbsp;{{ topic_title }}&nbsp;&frasl;&nbsp;{{ article_title }}</div>
+    <h1>{{ article_title }}</h1>
+    {{ article_content|safe }}
+{% endblock %}
+{% block js %}
+<script src="../../js/jquery.min.js"></script>
+<script src="../../js/bootstrap.min.js"></script>
+<script src="../../js/scripts.js"></script>
+{% endblock %}

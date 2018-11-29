@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+{% block title %}Энциклопедия DevMan{% endblock %}
+{% block css %}
+<link href="css/bootstrap.css" rel="stylesheet">
+<link href="css/style.css" rel="stylesheet">
+{% endblock %}
+{% block content %}
+    <div class="breadcrumbs">Home&nbsp;&frasl;</div>
+    <h1>Содержание</h1>
+    <div class="index-content">
+    {% for topic in topics %}
+      <h2>{{ topic.title }}</h2>
+      <ul>
+      {% for article in articles %}
+        {% if article.topic == topic.slug %}
+          <li><a href="articles/{{ article.path }}">{{ article.title }}</a>
+        {% endif %}
+      {% endfor %}
+      </ul>
+    {% endfor %}
+    </div>
+{% endblock %}
+{% block js %}
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/scripts.js"></script>
+{% endblock %}
