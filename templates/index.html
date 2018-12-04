@@ -13,7 +13,7 @@
       <ul>
       {% for article in articles %}
         {% if article.topic == topic.slug %}
-          <li><a href="articles/{{ article.path }}">{{ article.title }}</a>
+          <li><a href="articles/{{ article.dir_name }}/{{ article.filename }}">{{ article.title }}</a>
         {% endif %}
       {% endfor %}
       </ul>
