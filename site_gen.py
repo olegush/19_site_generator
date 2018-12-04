@@ -2,7 +2,7 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 import json
 import os
 from markdown2 import Markdown
-import re
+from slugify import slugify
 import time
 
 
@@ -18,15 +18,12 @@ def get_env():
     )
 
 
-def get_new_articles_list(articles_list):
-    articles = []
-    for article in sorted(articles_list, key=lambda x: x['title']):
-        article['path'] = re.sub(
-            '[^0-9a-z_/.-]',
-            '',
-            article['source']
-        ).replace('.md', '.html')
-        articles.append(article)
+def get_articles_list_with_paths(articles_list, file_ext):
+    articles = sorted(articles_list, key=lambda x: x['title'])
+    for article in articles:
+        source = article['source'].split('/')
+        article['dir_name'] = source[0]
+        article['filename'] = slugify(source[1].replace('.md', '')) + file_ext
     return articles
 
 
@@ -46,53 +43,51 @@ def get_html_data(dir_articles, path, markdowner):
     return markdowner.convert(md_data)
 
 
-def write_article_file(path, filename, filext, article_str):
+def write_article_file(path, filename, article_str):
     if not os.path.isdir(path):
         os.mkdir(path)
     with open(
-        os.path.join(path, filename + filext),
+        os.path.join(path, filename),
         mode='w',
         encoding='utf-8'
     ) as file_article:
         file_article.write(article_str)
 
 
-def write_articles_files(template, topics, articles):
+def write_articles_files(path, template, topics, articles):
     template_article = get_env().get_template(template)
     markdowner = Markdown()
     for topic in topics:
         for article in filter(lambda x: x['topic']== topic['slug'], articles):
-            dirname, full_filename = os.path.split(article['path'])
-            filename, fil_ext = os.path.splitext(full_filename)
-            path_to_articles_dir = os.path.join('docs/articles', dirname)
+            path_to_articles_dir = os.path.join(path, article['dir_name'])
             article_html = get_html_data(
                 'articles',
                 article['source'],
                 markdowner
             )
             article_str = template_article.render(
-                url=article['path'],
                 topic_title=topic['title'],
                 article_title=article['title'],
                 article_content=article_html
             )
             write_article_file(
                 path_to_articles_dir,
-                filename,
-                fil_ext,
+                article['filename'],
                 article_str
             )
-
 
 
 if __name__ == '__main__':
     start_time = time.time()
     data_for_site = load_data('config.json')
     topics = sorted(data_for_site['topics'], key=lambda x: x['title'])
-    articles = get_new_articles_list(data_for_site['articles'])
+    articles = get_articles_list_with_paths(data_for_site['articles'], '.html')
     print('Data loaded and formatted')
     write_index_file('index.html', topics, articles)
     print('Index.html created')
-    write_articles_files('article.html', topics, articles)
-    print('Articles created')
-    print('{:.2f} seconds'.format(time.time() - start_time))
+    write_articles_files('docs/articles', 'article.html', topics, articles)
+    print('{} Articles on {} topics were created in {:.2f} seconds'.format(
+        len(articles),
+        len(topics),
+        time.time() - start_time
+    ))
