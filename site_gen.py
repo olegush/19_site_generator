@@ -58,7 +58,7 @@ def write_articles_files(path, template, topics, articles):
     template_article = get_env().get_template(template)
     markdowner = Markdown()
     for topic in topics:
-        for article in filter(lambda x: x['topic']== topic['slug'], articles):
+        for article in filter(lambda x: x['topic'] == topic['slug'], articles):
             path_to_articles_dir = os.path.join(path, article['dir_name'])
             article_html = get_html_data(
                 'articles',
