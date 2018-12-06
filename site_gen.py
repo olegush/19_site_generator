@@ -19,12 +19,12 @@ def get_env():
 
 
 def get_articles_list_with_paths(articles_list, file_ext):
-    articles = sorted(articles_list, key=lambda x: x['title'])
+    articles = articles_list.copy()
     for article in articles:
         source = article['source'].split('/')
         article['dir_name'] = source[0]
         article['filename'] = slugify(source[1].replace('.md', '')) + file_ext
-    return articles
+    return sorted(articles, key=lambda x: x['title'])
 
 
 def write_index_file(template, topics, articles):
